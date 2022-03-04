@@ -28,8 +28,8 @@ public abstract class Account {
 
     public abstract void afterOneDay();
 
-    public void withdrawMoney(float money) throws Exception {
-        if (!this.client.IsVerify()) {
+    public void withdrawMoney(float money) {
+        if (!this.client.isVerify()) {
             if (money >= this.client.getBank().getUnverified()) {
                 throw new BankException("You need to Verify your account before you withdraw money");
             }
@@ -45,8 +45,8 @@ public abstract class Account {
         this.money += money;
     }
 
-    public Transaction transferMoney(float money, Account account) throws Exception {
-        if (!this.client.IsVerify()) {
+    public Transaction transferMoney(float money, Account account) {
+        if (!this.client.isVerify()) {
             if (money >= this.client.getBank().getUnverified()) {
                 throw new BankException("You need to verify your account before you transfer money");
             }

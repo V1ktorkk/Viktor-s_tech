@@ -4,31 +4,31 @@ import ru.itmo.banks.model.Client;
 import ru.itmo.banks.model.Transaction;
 import ru.itmo.banks.tool.BankException;
 
-public class DepositAccount extends Account{
+public class DepositAccount extends Account {
     private float moneyAccount;
     private int daysPercent;
     private float limit;
     private int time = 0;
-    public DepositAccount(float money, Client client, float limit){
+
+    public DepositAccount(float money, Client client, float limit) {
         super(money, client);
         this.daysPercent = 0;
         this.moneyAccount = 0;
         this.limit = limit;
     }
 
-    public void withdrawMoney(float money) throws Exception {
-        if (this.time >= this.limit){
+    public void withdrawMoney(float money) {
+        if (this.time >= this.limit) {
             super.withdrawMoney(money);
         }
     }
 
     @Override
-    public Transaction transferMoney(float money, Account account) throws Exception {
-        if (this.time >= this.limit){
+    public Transaction transferMoney(float money, Account account) {
+        if (this.time >= this.limit) {
             return super.transferMoney(money, account);
-        }
-       else{
-           throw new BankException("the limit hasn't expired");
+        } else {
+            throw new BankException("the limit hasn't expired");
         }
     }
 
@@ -42,7 +42,8 @@ public class DepositAccount extends Account{
         this.daysPercent = 0;
         afterOneMonth();
     }
-    private void afterOneMonth(){
+
+    private void afterOneMonth() {
         super.money += this.moneyAccount;
     }
 }
