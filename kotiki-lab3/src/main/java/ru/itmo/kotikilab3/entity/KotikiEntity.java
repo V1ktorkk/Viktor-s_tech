@@ -13,7 +13,7 @@ public class KotikiEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "ownerId")
+    @Column(name = "owner_id")
     private Integer ownerId;
     @Basic
     @Column(name = "name")
@@ -40,7 +40,7 @@ public class KotikiEntity {
     private List<KotikiEntity> friends;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ownerId", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id", insertable = false, updatable = false)
     private OwnersEntity owner;
 
     public KotikiEntity(String name, String breed, Colors color, Date birthdate, Integer ownerId) {
