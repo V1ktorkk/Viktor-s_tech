@@ -3,6 +3,7 @@ package ru.itmo.kotikilab3.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,12 +11,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.itmo.kotikilab3.entity.Colors;
 import ru.itmo.kotikilab3.entity.KotikiEntity;
 import ru.itmo.kotikilab3.service.KotikiService;
+import ru.itmo.kotikilab3.service.OwnerService;
+import ru.itmo.kotikilab3.service.UserService;
 import ru.itmo.kotikilab3.transformation.TransformCat;
 
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -24,15 +28,22 @@ public class CatController {
 
     @Autowired
     private KotikiService kotikiService;
-
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity findCat(@RequestParam(value = "id", required = false) Integer id) {
+    public ResponseEntity findCat(@RequestParam(value = "id",required = false) Integer id, Authentication authentication) {
         if (id == null){
             return new ResponseEntity("id can't be null", HttpStatus.BAD_REQUEST);
         }
-        else {
-            return ResponseEntity.ok(TransformCat.transformEntityToWrappedEntity(kotikiService.findById(id)));
+        var user = userService.loadUserByUsername(authentication.getName());
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN"));
+        var kotik = kotikiService.findById(id);
+        if (isAdmin || Objects.equals(kotik.getOwner().getUsername(), authentication.getName())){
+            return ResponseEntity.ok(TransformCat.transformEntityToWrappedEntity(kotik));
+        }
+        else{
+            return (ResponseEntity) ResponseEntity.badRequest();
         }
     }
 
@@ -42,27 +53,46 @@ public class CatController {
             @RequestParam(value = "breed") String breed,
             @RequestParam(value = "color") Colors color,
             @RequestParam(value = "ownerId") int ownerId,
-            @RequestParam(value = "birthdate") String birthdate)
+            @RequestParam(value = "birthdate") String birthdate,
+            Authentication authentication)
             throws ParseException {
-        kotikiService.saveNewCat(name, breed, color, ownerId,
-                new Date(new SimpleDateFormat("yyyyMMdd").parse(birthdate).getTime()));
-        return ResponseEntity.ok("okk");
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN"));
+        if (isAdmin) {
+            kotikiService.saveNewCat(name, breed, color, ownerId,
+                    new Date(new SimpleDateFormat("yyyyMMdd").parse(birthdate).getTime()));
+            return ResponseEntity.ok("okk");
+        }
+        else{
+            return (ResponseEntity) ResponseEntity.badRequest();
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity deleteById(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity deleteById(@RequestParam(value = "id") Integer id, Authentication authentication) {
         if (id == null){
             return new ResponseEntity("id can't be null", HttpStatus.BAD_REQUEST);
         }
-        else {
+        var user = userService.loadUserByUsername(authentication.getName());
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN"));
+        var kotik = kotikiService.findById(id);
+        if (isAdmin || Objects.equals(kotik.getOwner().getUsername(), authentication.getName())){
             kotikiService.delete(id);
             return ResponseEntity.ok("okk");
+        }
+        else {
+            return (ResponseEntity) ResponseEntity.badRequest();
         }
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/findall")
-    public ResponseEntity findAllKotiki() {
-        return ResponseEntity.ok(kotikiService.findAllKotiki());
+    public ResponseEntity findAllKotiki(Authentication authentication) {
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN"));
+        if (isAdmin) {
+            return ResponseEntity.ok(kotikiService.findAllKotiki());
+        }
+        else{
+            return (ResponseEntity) ResponseEntity.badRequest();
+            }
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/addrelationship")

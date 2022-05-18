@@ -67,6 +67,8 @@ public class KotikiEntity {
         return ownerId;
     }
 
+    public OwnersEntity getOwner(){return owner;}
+
     public void setOwnerId(Integer ownerId) {
         this.ownerId = ownerId;
     }
