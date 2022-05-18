@@ -1,19 +1,12 @@
 package ru.itmo.kotikilab3.entity;
 
-import java.awt.*;
-
-public enum Colors {
-    BLACK("BLACK"),
-    WHITE("WHITE"),
-    BLUE("BLUE"),
-    GRAY("GREY"),
-    PINK("PINK"),
-    RAINBOW("RAINBOW");
+public enum Roles {
+    USER("USER"),
+    ADMIN("ADMIN");
 
     private String title;
-    private Colors colors;
 
-    Colors(String title) {
+    Roles(String title) {
         this.title = title;
     }
 
@@ -25,5 +18,4 @@ public enum Colors {
     public String toString() {
         return title;
     }
-
 }
