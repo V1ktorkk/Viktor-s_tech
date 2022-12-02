@@ -1,0 +1,31 @@
+<idea-plugin>
+  <id>com.your.company.unique.plugin.id</id>
+  <name>Plugin_for_devTools_lab5</name>
+  <version>1.0</version>
+  <vendor email="odinetcv@yandex.ru" >ViktorCompany</vendor>
+
+  <description> hjghvhjnkjnkjn jbjkb kj kj jk jbhjbjhbhjbhjbhjbjhbjhbhjb </description>
+
+  <change-notes>
+  </change-notes>
+
+
+
+  <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id = "refCode" class="Actions.CodeStyle" text="MyCodeStyle">
+      <add-to-group group-id="EditorActions" anchor="last"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl 0"/>
+    </action>
+    <action id="my" class="Actions.RefactoCode" text="ref">
+      <add-to-group group-id="EditorActions" anchor="last"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift P"/>
+    </action>
+  </actions>
+
+</idea-plugin>

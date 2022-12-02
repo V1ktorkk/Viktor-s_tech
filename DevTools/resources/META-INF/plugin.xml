@@ -1,0 +1,29 @@
+<idea-plugin>
+  <id>com.your.company.unique.plugin.id</id>
+  <name>DevTools</name>
+  <version>1.0</version>
+  <vendor email="odinetcv@yandex.ru" >Viktorkk</vendor>
+
+  <description>rknsglkfdnlgknldknglkndlkfbnlkdxnfblknxdkfgnblkxdfn</description>
+
+
+  <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="pluginRef" class="myActions.RefactorDev" text="RefactorCode">
+      <add-to-group group-id="EditorActions" anchor="last"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta 8"/>
+    </action>
+  </actions>
+
+</idea-plugin>
